@@ -17,7 +17,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
@@ -26,13 +26,16 @@ export default function LoginPage() {
       const res = await fetch('/api/login', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       });
 
       if (res.ok) {
-        router.push('/main-courses');
+        const userData = await res.json();
+        if (userData.role === 'INSTRUCTOR') {
+          router.push('/dashboard');
+        } else {
+          router.push('/main-courses');
+        }
       } else {
         const data = await res.json();
         setError(data.message || 'Login failed');
@@ -46,16 +49,13 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10"></div>
       
-      {/* Floating Elements */}
       <div className="absolute top-20 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
       <div className="absolute top-40 right-20 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
       <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-500"></div>
 
       <Card className="w-full p-4 max-w-md shadow-2xl border-0 bg-white/80 backdrop-blur-xl relative overflow-hidden">
-        {/* Subtle gradient border effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 rounded-lg blur opacity-20"></div>
         <div className="relative bg-white p-4 rounded-lg">
           <CardHeader className="space-y-1 pb-6">

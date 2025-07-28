@@ -16,7 +16,7 @@ model User {
   id        Int      @id @default(autoincrement())
   name      String   @default("")
   email     String   @unique
-  password  String
+  password  String   @db.VarChar(60)
   role      Role
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

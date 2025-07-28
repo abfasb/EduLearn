@@ -51,7 +51,7 @@ export default function UsersPage() {
   };
 
   return (
-    <div style={{ padding: 20 }} className='bg-white w-full h-100 text-black'>
+    <div style={{ padding: 20 }} className='bg-white w-full  text-black'>
       <h1>{isEditing ? 'Edit User' : 'Create User'}</h1>
       <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
         <input

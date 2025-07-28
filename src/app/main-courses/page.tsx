@@ -1,7 +1,7 @@
 // app/courses/page.tsx
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   LayoutDashboard, 
@@ -19,11 +19,36 @@ import {
   Play
 } from 'lucide-react';
 
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
+
 export default function CoursesPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/api/auth/session');
+        const data = await res.json();
+        if (data.user) {
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user', error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   
-  // Dummy course data
   const courses = [
     {
       id: 1,
@@ -125,7 +150,8 @@ export default function CoursesPage() {
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+           
+
             <div className="flex items-center">
               <div className="flex items-center space-x-1">
                 <GraduationCap className="h-8 w-8 text-indigo-600" />
@@ -142,75 +168,23 @@ export default function CoursesPage() {
               </nav>
             </div>
             
-            {/* Search and User Actions */}
-            <div className="flex items-center space-x-4">
-              {/* Search Bar */}
-              <div className="hidden md:block relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search courses..."
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64"
-                />
-              </div>
-              
-              {/* User Actions */}
-              <div className="hidden md:flex items-center space-x-4">
-                <button className="text-gray-600 hover:text-indigo-600">
-                  <Bookmark className="h-6 w-6" />
-                </button>
-                <button className="text-gray-600 hover:text-indigo-600">
-                  <MessageSquare className="h-6 w-6" />
-                </button>
-                <div className="relative">
-                  <button className="flex items-center text-sm rounded-full focus:outline-none">
+            {/* User Actions */}
+            <div className="hidden md:flex items-center space-x-4">
+              {/* ... */}
+              <div className="relative">
+                <button className="flex items-center text-sm rounded-full focus:outline-none">
+                  {user ? (
+                    <div className="bg-indigo-100 text-indigo-800 rounded-full w-10 h-10 flex items-center justify-center font-semibold">
+                      {user.name.charAt(0)}
+                    </div>
+                  ) : (
                     <div className="bg-gray-200 border-2 border-dashed rounded-xl w-10 h-10" />
-                  </button>
-                </div>
+                  )}
+                </button>
               </div>
-              
-              {/* Mobile menu button */}
-              <button 
-                className="md:hidden text-gray-500 hover:text-gray-700"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                <Menu className="h-6 w-6" />
-              </button>
             </div>
           </div>
         </div>
-        
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200">
-            <div className="pt-2 pb-3 space-y-1 px-4">
-              <a href="#" className="text-indigo-600 block px-3 py-2 font-medium">Home</a>
-              <a href="#" className="text-gray-700 hover:text-indigo-600 block px-3 py-2 font-medium">Courses</a>
-              <a href="#" className="text-gray-700 hover:text-indigo-600 block px-3 py-2 font-medium">Instructors</a>
-              <a href="#" className="text-gray-700 hover:text-indigo-600 block px-3 py-2 font-medium">Resources</a>
-              <a href="#" className="text-gray-700 hover:text-indigo-600 block px-3 py-2 font-medium">Pricing</a>
-            </div>
-            <div className="p-4 border-t border-gray-200">
-              <div className="flex items-center space-x-4">
-                <div className="relative flex-1">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search courses..."
-                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-full"
-                  />
-                </div>
-                <button className="text-gray-600 hover:text-indigo-600">
-                  <Bookmark className="h-6 w-6" />
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </header>
 
       {/* Main Content */}
