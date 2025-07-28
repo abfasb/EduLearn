@@ -8,16 +8,13 @@ import { UserPlus, BookOpen, GraduationCap } from 'lucide-react';
 export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4">
-      {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10"></div>
       
-      {/* Floating Elements */}
       <div className="absolute top-20 right-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
       <div className="absolute top-40 left-20 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>
       <div className="absolute -bottom-8 right-1/4 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-500"></div>
 
       <Card className="w-full max-w-md shadow-2xl border-0 bg-white/80 backdrop-blur-xl relative overflow-hidden">
-        {/* Subtle gradient border effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 rounded-lg blur opacity-20"></div>
         
         <div className="relative bg-white rounded-lg">
