@@ -16,23 +16,61 @@ import {
   ArrowRight,
   Filter,
   ChevronDown,
-  Play
+  Play,
+  Plus,
+  BookmarkCheck
 } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface User {
   id: number;
   name: string;
   email: string;
   role: string;
+  avatarUrl?: string;
 }
-
 
 export default function CoursesPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
   const [user, setUser] = useState<User | null>(null);
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await fetch('/api/auth/session');
@@ -48,7 +86,6 @@ export default function CoursesPage() {
     fetchUser();
   }, []);
 
-  
   const courses = [
     {
       id: 1,
@@ -62,6 +99,8 @@ export default function CoursesPage() {
       thumbnail: "/react-course.jpg",
       isFeatured: true,
       isBookmarked: false,
+      price: 89.99,
+      tags: ["React", "Hooks", "Performance"]
     },
     {
       id: 2,
@@ -75,6 +114,8 @@ export default function CoursesPage() {
       thumbnail: "/design-course.jpg",
       isFeatured: true,
       isBookmarked: true,
+      price: 99.99,
+      tags: ["Figma", "Prototyping", "User Research"]
     },
     {
       id: 3,
@@ -88,6 +129,8 @@ export default function CoursesPage() {
       thumbnail: "/data-course.jpg",
       isFeatured: false,
       isBookmarked: false,
+      price: 79.99,
+      tags: ["Python", "Pandas", "Visualization"]
     },
     {
       id: 4,
@@ -101,6 +144,8 @@ export default function CoursesPage() {
       thumbnail: "/js-course.jpg",
       isFeatured: false,
       isBookmarked: true,
+      price: 74.99,
+      tags: ["ES6+", "Async", "Performance"]
     },
     {
       id: 5,
@@ -114,6 +159,8 @@ export default function CoursesPage() {
       thumbnail: "/mobile-course.jpg",
       isFeatured: true,
       isBookmarked: false,
+      price: 69.99,
+      tags: ["iOS", "Android", "Responsive"]
     },
     {
       id: 6,
@@ -127,126 +174,199 @@ export default function CoursesPage() {
       thumbnail: "/python-course.jpg",
       isFeatured: false,
       isBookmarked: false,
+      price: 89.99,
+      tags: ["Scikit-learn", "TensorFlow", "NLP"]
     },
   ];
-  
+
+  // Filter courses based on selected category
   const filteredCourses = activeCategory === 'all' 
     ? courses 
     : courses.filter(course => course.category === activeCategory);
 
+  // Categories for filtering
   const categories = [
-    { id: 'all', name: 'All Courses' },
-    { id: 'development', name: 'Development' },
-    { id: 'design', name: 'Design' },
-    { id: 'data', name: 'Data Science' },
-    { id: 'business', name: 'Business' },
+    { id: 'all', name: 'All Courses', icon: <BookOpen className="w-4 h-4 mr-2" /> },
+    { id: 'development', name: 'Development', icon: <LayoutDashboard className="w-4 h-4 mr-2" /> },
+    { id: 'design', name: 'Design', icon: <GraduationCap className="w-4 h-4 mr-2" /> },
+    { id: 'data', name: 'Data Science', icon: <Search className="w-4 h-4 mr-2" /> },
+    { id: 'business', name: 'Business', icon: <User className="w-4 h-4 mr-2" /> },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
       {/* Navigation Bar */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+      <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-           
-
             <div className="flex items-center">
               <div className="flex items-center space-x-1">
-                <GraduationCap className="h-8 w-8 text-indigo-600" />
-                <span className="text-2xl font-bold text-gray-900">LearnHub</span>
+                <GraduationCap className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
+                <span className="text-2xl font-bold text-gray-900 dark:text-white">LearnHub</span>
               </div>
               
               {/* Desktop Navigation */}
               <nav className="hidden md:flex md:ml-12 md:space-x-8">
-                <a href="#" className="text-indigo-600 font-medium px-3 py-2 rounded-md">Home</a>
-                <a href="#" className="text-gray-700 hover:text-indigo-600 font-medium px-3 py-2 rounded-md">Courses</a>
-                <a href="#" className="text-gray-700 hover:text-indigo-600 font-medium px-3 py-2 rounded-md">Instructors</a>
-                <a href="#" className="text-gray-700 hover:text-indigo-600 font-medium px-3 py-2 rounded-md">Resources</a>
-                <a href="#" className="text-gray-700 hover:text-indigo-600 font-medium px-3 py-2 rounded-md">Pricing</a>
+                <a href="#" className="text-indigo-600 dark:text-indigo-400 font-medium px-3 py-2 rounded-md">Home</a>
+                <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium px-3 py-2 rounded-md">Courses</a>
+                <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium px-3 py-2 rounded-md">Instructors</a>
+                <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium px-3 py-2 rounded-md">Resources</a>
+                <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium px-3 py-2 rounded-md">Pricing</a>
               </nav>
             </div>
             
             {/* User Actions */}
             <div className="hidden md:flex items-center space-x-4">
-              {/* ... */}
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Search className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+              </Button>
+              <Button variant="outline" className="hidden lg:flex">
+                <Plus className="h-4 w-4 mr-2" /> New Course
+              </Button>
               <div className="relative">
-                <button className="flex items-center text-sm rounded-full focus:outline-none">
-                  {user ? (
-                    <div className="bg-indigo-100 text-indigo-800 rounded-full w-10 h-10 flex items-center justify-center font-semibold">
-                      {user.name.charAt(0)}
-                    </div>
-                  ) : (
-                    <div className="bg-gray-200 border-2 border-dashed rounded-xl w-10 h-10" />
-                  )}
-                </button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="rounded-full">
+                        {user?.avatarUrl ? (
+                          <Avatar>
+                            <AvatarImage src={user.avatarUrl} alt={user.name} />
+                            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                        ) : (
+                          <Avatar>
+                            <AvatarFallback className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
+                              {user?.name?.charAt(0) || "U"}
+                            </AvatarFallback>
+                          </Avatar>
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{user?.name || "User Profile"}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </div>
+            
+            {/* Mobile Menu Button */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              <Menu className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+            </Button>
           </div>
+          
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-800">
+              <nav className="flex flex-col space-y-2">
+                <a href="#" className="text-indigo-600 dark:text-indigo-400 font-medium px-3 py-2 rounded-md">Home</a>
+                <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium px-3 py-2 rounded-md">Courses</a>
+                <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium px-3 py-2 rounded-md">Instructors</a>
+                <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium px-3 py-2 rounded-md">Resources</a>
+                <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium px-3 py-2 rounded-md">Pricing</a>
+                <div className="pt-4 flex space-x-4">
+                  <Button variant="outline" className="flex-1">
+                    <Plus className="h-4 w-4 mr-2" /> New
+                  </Button>
+                  {user ? (
+                    <Avatar>
+                      <AvatarFallback className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
+                        {user.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <Button variant="outline">Sign In</Button>
+                  )}
+                </div>
+              </nav>
+            </div>
+          )}
         </div>
       </header>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white mb-12">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+        <section className="relative bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-800 dark:to-purple-800 rounded-2xl p-8 text-white mb-12 overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/[0.05]"></div>
+          <div className="relative z-10 max-w-3xl">
+            <Badge variant="secondary" className="mb-4 bg-white text-indigo-600 dark:bg-indigo-900 dark:text-white">
+              <Star className="h-4 w-4 mr-2 fill-current" /> Featured Courses
+            </Badge>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
               Unlock Your Potential with Expert-Led Courses
             </h1>
-            <p className="text-xl mb-8 opacity-90">
+            <p className="text-xl mb-8 opacity-90 max-w-2xl">
               Join thousands of students learning in-demand skills from industry professionals
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-white text-indigo-600 font-medium py-3 px-6 rounded-lg hover:bg-gray-100 transition flex items-center justify-center">
+              <Button className="bg-white text-indigo-600 hover:bg-gray-100 dark:bg-white dark:text-indigo-600 py-6 px-8 text-base">
                 Browse Courses <ArrowRight className="ml-2 h-5 w-5" />
-              </button>
-              <button className="bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg hover:bg-indigo-800 transition flex items-center justify-center">
+              </Button>
+              <Button variant="outline" className="bg-indigo-700/30 text-white hover:bg-indigo-800/50 hover:text-white border-white/30 py-6 px-8 text-base">
                 Become an Instructor
-              </button>
+              </Button>
             </div>
           </div>
+          
+          {/* Decorative Elements */}
+          <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-white/10"></div>
+          <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-purple-500/20"></div>
         </section>
 
         {/* Category Filter */}
         <section className="mb-12">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4 md:mb-0">Popular Courses</h2>
-            <div className="flex items-center space-x-4">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Popular Courses</h2>
+              <p className="text-gray-600 dark:text-gray-400">Handpicked by our expert educators</p>
+            </div>
+            <div className="flex items-center space-x-4 mt-4 md:mt-0">
               <div className="relative">
-                <select className="appearance-none bg-white border border-gray-300 rounded-lg py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                  <option>Sort by: Popular</option>
-                  <option>Sort by: Newest</option>
-                  <option>Sort by: Rating</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <ChevronDown className="h-4 w-4" />
-                </div>
+                <Select>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Sort by: Popular" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="popular">Sort by: Popular</SelectItem>
+                    <SelectItem value="newest">Sort by: Newest</SelectItem>
+                    <SelectItem value="rating">Sort by: Rating</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <button className="flex items-center text-gray-700 hover:text-indigo-600">
+              <Button variant="outline">
                 <Filter className="h-5 w-5 mr-2" />
                 Filters
-              </button>
+              </Button>
             </div>
           </div>
           
           {/* Category Tabs */}
-          <div className="flex overflow-x-auto pb-2 mb-8 -mx-4 px-4">
-            <div className="flex space-x-4">
+          <Tabs defaultValue="all" className="mb-8">
+            <TabsList className="flex overflow-x-auto pb-2 -mx-4 px-4 bg-transparent">
               {categories.map((category) => (
-                <button
+                <TabsTrigger 
                   key={category.id}
+                  value={category.id}
                   onClick={() => setActiveCategory(category.id)}
-                  className={`px-6 py-3 rounded-full whitespace-nowrap transition ${
-                    activeCategory === category.id
+                  className={`px-6 py-3 rounded-full whitespace-nowrap transition-all ${
+                    activeCategory === category.id 
                       ? 'bg-indigo-600 text-white shadow-md'
-                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                   }`}
                 >
+                  {category.icon}
                   {category.name}
-                </button>
+                </TabsTrigger>
               ))}
-            </div>
-          </div>
+            </TabsList>
+          </Tabs>
           
           {/* Course Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -256,156 +376,190 @@ export default function CoursesPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition"
+                whileHover={{ y: -5 }}
               >
-                {/* Course Thumbnail */}
-                <div className="relative">
-                  <div className="bg-gray-200 border-2 border-dashed rounded-t-2xl w-full h-48" />
-                  {course.isFeatured && (
-                    <div className="absolute top-4 left-4 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                      Featured
+                <Card className="h-full overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-all">
+                  <div className="relative">
+                    <div className="aspect-video bg-gradient-to-r from-indigo-400/20 to-purple-400/20 w-full flex items-center justify-center">
+                      <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
                     </div>
-                  )}
-                  <button className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md hover:bg-gray-100">
-                    <Bookmark 
-                      className={`h-5 w-5 ${course.isBookmarked ? 'text-amber-500 fill-amber-500' : 'text-gray-500'}`} 
-                    />
-                  </button>
-                  <div className="absolute bottom-4 right-4 bg-indigo-600 text-white rounded-full p-3 shadow-lg">
-                    <Play className="h-5 w-5" />
-                  </div>
-                </div>
-                
-                {/* Course Content */}
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="font-bold text-xl text-gray-900 mb-1">{course.title}</h3>
-                      <p className="text-gray-600">by {course.instructor}</p>
-                    </div>
-                    <div className="bg-gray-200 border-2 border-dashed rounded-xl w-10 h-10" />
+                    {course.isFeatured && (
+                      <Badge variant="secondary" className="absolute top-4 left-4 bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">
+                        Featured
+                      </Badge>
+                    )}
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="absolute top-4 right-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full p-2 hover:bg-white dark:hover:bg-gray-700"
+                    >
+                      {course.isBookmarked ? (
+                        <BookmarkCheck className="h-5 w-5 text-amber-500 fill-amber-500" />
+                      ) : (
+                        <Bookmark className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                      )}
+                    </Button>
                   </div>
                   
-                  <div className="flex items-center mb-4">
-                    <div className="flex text-amber-500 mr-2">
-                      <Star className="w-5 h-5 fill-current" />
-                      <Star className="w-5 h-5 fill-current" />
-                      <Star className="w-5 h-5 fill-current" />
-                      <Star className="w-5 h-5 fill-current" />
-                      <Star className="w-5 h-5 fill-current" />
-                    </div>
-                    <span className="text-gray-700 font-medium">{course.rating}</span>
-                  </div>
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-xl">{course.title}</CardTitle>
+                    <CardDescription className="flex items-center">
+                      <Avatar className="h-6 w-6 mr-2">
+                        <AvatarFallback className="text-xs">
+                          {course.instructor.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      by {course.instructor}
+                    </CardDescription>
+                  </CardHeader>
                   
-                  <div className="flex justify-between text-sm text-gray-600 mb-6">
-                    <div className="flex items-center">
-                      <User className="h-4 w-4 mr-1" />
-                      <span>{course.students.toLocaleString()} students</span>
+                  <CardContent className="pb-4">
+                    <div className="flex items-center mb-4">
+                      <div className="flex text-amber-500 mr-2">
+                        {[...Array(5)].map((_, i) => (
+                          <Star 
+                            key={i} 
+                            className={`w-4 h-4 ${i < Math.floor(course.rating) ? 'fill-current' : ''}`} 
+                          />
+                        ))}
+                      </div>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">{course.rating}</span>
+                      <span className="mx-2 text-gray-400">•</span>
+                      <span className="text-gray-600 dark:text-gray-400">{course.students.toLocaleString()} students</span>
                     </div>
-                    <div className="flex items-center">
-                      <Play className="h-4 w-4 mr-1" />
-                      <span>{course.duration}</span>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {course.tags.map((tag, index) => (
+                        <Badge 
+                          key={index} 
+                          variant="outline"
+                          className="text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-700"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
                     </div>
-                    <div className="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs rounded-full">
-                      {course.level}
+                    
+                    <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-400">
+                      <div className="flex items-center">
+                        <Play className="h-4 w-4 mr-1" />
+                        <span>{course.duration}</span>
+                      </div>
+                      <Badge variant={course.level === "Beginner" ? "secondary" : course.level === "Intermediate" ? "outline" : "default"}>
+                        {course.level}
+                      </Badge>
                     </div>
-                  </div>
+                  </CardContent>
                   
-                  <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-gray-900">$89.99</span>
-                    <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition">
+                  <CardFooter className="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-800">
+                    <div className="text-xl font-bold text-gray-900 dark:text-white">${course.price}</div>
+                    <Button className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-800">
                       Enroll Now
-                    </button>
-                  </div>
-                </div>
+                    </Button>
+                  </CardFooter>
+                </Card>
               </motion.div>
             ))}
+          </div>
+          
+          {/* Load More Button */}
+          <div className="mt-12 text-center">
+            <Button variant="outline" className="px-12 py-6">
+              Load More Courses
+            </Button>
           </div>
         </section>
         
         {/* CTA Section */}
-        <section className="bg-gradient-to-r from-gray-900 to-black rounded-2xl p-8 text-white mb-12">
-          <div className="max-w-3xl mx-auto text-center">
+        <section className="bg-gradient-to-r from-gray-900 to-black dark:from-gray-800 dark:to-gray-900 rounded-2xl p-12 text-white mb-12 relative overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/[0.05]"></div>
+          <div className="relative z-10 max-w-3xl mx-auto text-center">
+            <GraduationCap className="h-16 w-16 mx-auto text-indigo-400 mb-6" />
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Start Teaching Today
             </h2>
-            <p className="text-xl mb-8 opacity-90">
+            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
               Share your knowledge and earn money by creating courses
             </p>
-            <button className="bg-white text-gray-900 font-medium py-3 px-8 rounded-lg hover:bg-gray-100 transition">
+            <Button className="bg-white text-gray-900 hover:bg-gray-100 dark:bg-white dark:text-gray-900 py-6 px-12 text-base">
               Become an Instructor
-            </button>
+            </Button>
+          </div>
+        </section>
+        
+        {/* Testimonials Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-12 text-center">What Our Students Say</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((item) => (
+              <Card key={item} className="border border-gray-200 dark:border-gray-800">
+                <CardContent className="p-6">
+                  <div className="flex text-amber-500 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 mb-6 italic">
+                    "This platform completely transformed my career. The courses are well-structured and taught by industry experts who genuinely care about your success."
+                  </p>
+                  <div className="flex items-center">
+                    <Avatar>
+                      <AvatarFallback className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">JD</AvatarFallback>
+                    </Avatar>
+                    <div className="ml-4">
+                      <h4 className="font-semibold text-gray-900 dark:text-white">Jane Doe</h4>
+                      <p className="text-gray-600 dark:text-gray-400">Software Engineer</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-1 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+            <div className="lg:col-span-2">
+              <div className="flex items-center space-x-1 mb-6">
                 <GraduationCap className="h-8 w-8 text-indigo-400" />
                 <span className="text-2xl font-bold">LearnHub</span>
               </div>
-              <p className="text-gray-400 mb-4">
-                The best platform to learn new skills and advance your career.
+              <p className="text-gray-400 mb-6 max-w-md">
+                The best platform to learn new skills and advance your career. Join our community of over 100,000 learners worldwide.
               </p>
               <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white">
-                  <span className="sr-only">Twitter</span>
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white">
-                  <span className="sr-only">GitHub</span>
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                  </svg>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white">
-                  <span className="sr-only">LinkedIn</span>
-                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                  </svg>
-                </a>
+                {['twitter', 'github', 'linkedin', 'facebook'].map((social) => (
+                  <Button key={social} variant="ghost" size="icon" className="rounded-full bg-gray-800 hover:bg-gray-700">
+                    <div className="bg-gray-200 border-2 border-dashed rounded-xl w-6 h-6" />
+                  </Button>
+                ))}
               </div>
             </div>
             
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Company</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white">About</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Careers</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Blog</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Press</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Resources</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white">Help Center</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Tutorials</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Community</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Events</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white">Privacy</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Terms</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Cookie Policy</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Licenses</a></li>
-              </ul>
-            </div>
+            {['Company', 'Resources', 'Legal', 'Contact'].map((section) => (
+              <div key={section}>
+                <h3 className="text-lg font-semibold mb-6">{section}</h3>
+                <ul className="space-y-4">
+                  {['About', 'Careers', 'Blog', 'Press'].map((item) => (
+                    <li key={item}>
+                      <a href="#" className="text-gray-400 hover:text-white transition-colors">{item}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
           
-          <div className="mt-12 pt-8 border-t border-gray-800 text-sm text-gray-400 text-center">
-            © 2025 EduLearn. All rights reserved.
+          <div className="mt-16 pt-8 border-t border-gray-800 text-sm text-gray-400 text-center">
+            © 2025 LearnHub. All rights reserved. 
+            <div className="mt-2">
+              <a href="#" className="hover:text-white mx-4">Privacy Policy</a>
+              <a href="#" className="hover:text-white mx-4">Terms of Service</a>
+              <a href="#" className="hover:text-white mx-4">Cookies</a>
+            </div>
           </div>
         </div>
       </footer>
