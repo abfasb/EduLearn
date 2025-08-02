@@ -518,7 +518,6 @@ export default function CoursesPage() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
@@ -554,7 +553,7 @@ export default function CoursesPage() {
           </div>
           
           <div className="mt-16 pt-8 border-t border-gray-800 text-sm text-gray-400 text-center">
-            © 2025 LearnHub. All rights reserved. 
+            © 2025 EduLearn. All rights reserved. 
             <div className="mt-2">
               <a href="#" className="hover:text-white mx-4">Privacy Policy</a>
               <a href="#" className="hover:text-white mx-4">Terms of Service</a>
