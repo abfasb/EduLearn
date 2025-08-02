@@ -130,12 +130,10 @@ export default function CoursesPage() {
     },
   ];
   
-  // Filter courses based on selected category
   const filteredCourses = activeCategory === 'all' 
     ? courses 
     : courses.filter(course => course.category === activeCategory);
 
-  // Categories for filtering
   const categories = [
     { id: 'all', name: 'All Courses' },
     { id: 'development', name: 'Development' },
