@@ -13,7 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Plus, Edit, Trash, Upload, Video, BookOpen, BarChart, User, Settings, Search, ArrowRight, Check, X } from 'lucide-react';
 
-// Mock data types
 type Course = {
   id: string;
   title: string;
@@ -128,31 +127,26 @@ export default function DashboardPage() {
     type: 'video'
   });
   
-  // Filter courses based on search term
   const filteredCourses = courses.filter(course => 
     course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     course.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
   
-  // Get lessons for selected course
   const courseLessons = selectedCourse 
     ? lessons.filter(lesson => lesson.courseId === selectedCourse.id)
     : [];
   
-  // Handle course form changes
   const handleCourseChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setNewCourse(prev => ({ ...prev, [name]: value }));
   };
   
-  // Handle lesson form changes
   const handleLessonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewLesson(prev => ({ ...prev, [name]: value }));
   };
   
-  // Create a new course
   const handleCreateCourse = () => {
     const course: Course = {
       ...newCourse,
@@ -175,7 +169,6 @@ export default function DashboardPage() {
     setIsEditing(false);
   };
   
-  // Update an existing course
   const handleUpdateCourse = () => {
     if (!selectedCourse) return;
     
