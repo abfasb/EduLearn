@@ -181,13 +181,11 @@ export default function DashboardPage() {
     setIsEditing(false);
   };
   
-  // Delete a course
   const handleDeleteCourse = (id: string) => {
     setCourses(courses.filter(course => course.id !== id));
     if (selectedCourse?.id === id) setSelectedCourse(null);
   };
   
-  // Publish/unpublish a course
   const togglePublishCourse = (id: string) => {
     const updatedCourses = courses.map(course => 
       course.id === id ? { ...course, published: !course.published } : course
@@ -199,7 +197,6 @@ export default function DashboardPage() {
     }
   };
   
-  // Add a new lesson
   const handleAddLesson = () => {
     if (!selectedCourse) return;
     
@@ -211,7 +208,6 @@ export default function DashboardPage() {
     
     setLessons([...lessons, lesson]);
     
-    // Update course lesson count
     const updatedCourses = courses.map(course => 
       course.id === selectedCourse.id ? { ...course, lessons: course.lessons + 1 } : course
     );
