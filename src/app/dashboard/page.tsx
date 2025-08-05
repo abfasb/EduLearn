@@ -58,6 +58,7 @@ const mockCourses: Course[] = [
     published: true,
     createdAt: '2023-10-15'
   },
+  
   {
     id: '2',
     title: 'UI/UX Design Fundamentals',
